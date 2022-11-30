@@ -1,5 +1,6 @@
 const knex = require("../config/knexFile");
 
+//Show all the available estates
 exports.allEstates = (req, res) => {
   knex("inmuebles")
     .join(
@@ -16,6 +17,7 @@ exports.allEstates = (req, res) => {
     });
 };
 
+//Add one new Estate
 exports.addEstates = async (req, res) => {
   const {
     operacion,
@@ -65,4 +67,100 @@ exports.addEstates = async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
+};
+
+//Search one specific estate by id
+exports.searchId = (req, res) => {
+  const { id } = req.params;
+  knex("inmuebles")
+    .join(
+      "direcciones",
+      "inmuebles.direccionId",
+      "=",
+      "direcciones.direccionId"
+    )
+    .where("inmuebles.inmuebleId", id)
+    .then((respuesta) => {
+      res.json(respuesta);
+    })
+    .catch((error) => {
+      res.status(400).json({ error: error.message });
+    });
+};
+
+//Edit one existing estate selected by id
+exports.editEstate = async (req, res) => {
+  const id = req.params;
+  const {
+    operacion,
+    tipo,
+    dormitorios,
+    baños,
+    metrosTerreno,
+    metrosEdificados,
+    observaciones,
+    descripcion,
+    precio,
+    garage,
+    departamento,
+    zona,
+    domicilio,
+  } = req.body;
+  knex("direcciones")
+    .where("direccionId", id)
+    .update({
+      departamento: departamento,
+      zona: zona,
+      domicilio: domicilio,
+    })
+    .then((respuesta) => {
+      knex("inmuebles")
+        .where("direccionId", id)
+        .update(
+          {
+            operacion: operacion,
+            tipo: tipo,
+            dormitorios: dormitorios,
+            baños: baños,
+            metrosTerreno: metrosTerreno,
+            metrosEdificados: metrosEdificados,
+            observaciones: observaciones,
+            descripcion: descripcion,
+            precio: precio,
+            garage: garage,
+          },
+          ["operacion", "tipo", "dormitorios"]
+        )
+        .then((respuesta) => {
+          res.json({
+            inmueble: respuesta[0],
+            message: "Se ha actualizado el inmueble correctamente",
+          });
+        });
+    })
+    .catch((error) => {
+      res.status(400).json({ error: error.message });
+    });
+};
+
+//Delete one existing estate
+exports.deleteEstate = (req, res) => {
+  const id = req.params.id;
+  knex("inmuebles")
+    .where("direccionId", id)
+    .del()
+    .then(() => {
+      knex("direcciones")
+        .where("direccionId", id)
+        .del()
+        .then((respuesta) => {
+          res.json({
+            respuesta: respuesta,
+            message: "Se ha borrado al inmueble correctamente",
+          });
+        });
+    })
+    .catch((error) => {
+      res.status(400).json({ error: error.message });
+    });
 };
