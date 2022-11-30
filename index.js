@@ -15,7 +15,9 @@ app.use(cors());
 
 //RUTAS
 const users = require("./routes/users");
+const estates = require("./routes/estates");
 app.use("/api", users);
+app.use("/api", estates);
 
 //EJECUCION DEL SERVIDOR
 const port = process.env.PORT || 3001;
