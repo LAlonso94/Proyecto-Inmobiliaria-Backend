@@ -1,10 +1,18 @@
 const express = require("express");
-const { register } = require("../controllers/controllerUsers");
+const {
+  registerController,
+  loginController,
+} = require("../controllers/controllerUsers");
 const router = express.Router();
-const { runValidation } = require("../validators/index");
-const { validatorUser } = require("../validators/validatorUsers");
+const {
+  loginValidator,
+  userValidator,
+} = require("../validators/validatorUsers");
 
 //Registro de usuario
-router.post("/register", validatorUser, register);
+router.post("/register", userValidator, registerController);
+
+//Login
+router.post("/login", loginValidator, loginController);
 
 module.exports = router;
