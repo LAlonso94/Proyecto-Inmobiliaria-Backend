@@ -90,7 +90,7 @@ exports.searchId = (req, res) => {
 
 //Edit one existing estate selected by id
 exports.editEstate = async (req, res) => {
-  const id = req.params;
+  const { id } = req.params;
   const {
     operacion,
     tipo,
