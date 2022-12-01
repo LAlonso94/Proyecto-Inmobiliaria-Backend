@@ -8,8 +8,9 @@ const {
   editEstate,
   deleteEstate,
 } = require("../controllers/controllersEstates");
+const { verifyToken, verifyAdmin } = require("../validators/validatorUsers");
 
-router.get("/inmuebles", allEstates);
+router.get("/inmuebles", verifyToken, verifyAdmin, allEstates);
 router.get("/publicacion/:id", searchId);
 router.post("/inmuebles/nuevo", addEstates);
 router.put("/inmuebles/editar/:id", editEstate);
