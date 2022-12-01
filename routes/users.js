@@ -10,7 +10,7 @@ const {
 } = require("../validators/validatorUsers");
 
 //Registro de usuario
-router.post("/register", userValidator, registerController);
+router.post("/registro", userValidator, registerController);
 
 //Login
 router.post("/login", loginValidator, loginController);
