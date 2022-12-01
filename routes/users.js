@@ -3,6 +3,7 @@ const {
   registerController,
   loginController,
 } = require("../controllers/controllerUsers");
+const { runValidation } = require("../validators");
 const router = express.Router();
 const {
   loginValidator,
@@ -10,9 +11,9 @@ const {
 } = require("../validators/validatorUsers");
 
 //Registro de usuario
-router.post("/registro", userValidator, registerController);
+router.post("/registro", userValidator, runValidation, registerController);
 
 //Login
-router.post("/login", loginValidator, loginController);
+router.post("/login", loginValidator, runValidation, loginController);
 
 module.exports = router;
