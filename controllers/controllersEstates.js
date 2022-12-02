@@ -106,31 +106,29 @@ exports.editEstate = async (req, res) => {
     zona,
     domicilio,
   } = req.body;
-  knex("direcciones")
-    .where("direccionId", id)
+  knex("inmuebles")
+    .where("inmuebleId", id)
+    .returning("direccionId")
     .update({
-      departamento: departamento,
-      zona: zona,
-      domicilio: domicilio,
+      operacion: operacion,
+      tipo: tipo,
+      dormitorios: dormitorios,
+      baños: baños,
+      metrosTerreno: metrosTerreno,
+      metrosEdificados: metrosEdificados,
+      observaciones: observaciones,
+      descripcion: descripcion,
+      precio: precio,
+      garage: garage,
     })
     .then((respuesta) => {
-      knex("inmuebles")
-        .where("direccionId", id)
-        .update(
-          {
-            operacion: operacion,
-            tipo: tipo,
-            dormitorios: dormitorios,
-            baños: baños,
-            metrosTerreno: metrosTerreno,
-            metrosEdificados: metrosEdificados,
-            observaciones: observaciones,
-            descripcion: descripcion,
-            precio: precio,
-            garage: garage,
-          },
-          ["operacion", "tipo", "dormitorios"]
-        )
+      knex("direcciones")
+        .where("direccionId", respuesta[0].direccionId)
+        .update({
+          departamento: departamento,
+          zona: zona,
+          domicilio: domicilio,
+        })
         .then((respuesta) => {
           res.json({
             inmueble: respuesta[0],
