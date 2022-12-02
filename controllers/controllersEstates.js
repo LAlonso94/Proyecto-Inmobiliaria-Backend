@@ -63,7 +63,10 @@ exports.addEstates = async (req, res) => {
       ],
       ["operacion", "tipo", "dormitorios"]
     );
-    res.json(newEstate);
+    res.json({
+      newEstate: newEstate,
+      message: "El inmueble se agrego correctamente",
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
