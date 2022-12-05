@@ -165,3 +165,14 @@ exports.deleteEstate = (req, res) => {
       res.status(400).json({ error: error.message });
     });
 };
+
+//Filter of Estates
+exports.filterEstates = (req, res) => {
+  const { operacion, tipo, departamento } = req.body;
+  knex("inmuebles").join(
+    "direcciones",
+    "inmuebles.direccionId",
+    "=",
+    "direcciones.direccionId"
+  );
+};
