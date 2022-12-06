@@ -17,7 +17,7 @@ const {
 
 router.get("/inmuebles", allEstates);
 router.get("/publicacion/:id", searchId);
-router.get("/inmuebles/filtro", filterEstates);
+router.post("/inmuebles/filtro", filterEstates);
 router.post("/inmuebles/nuevo", addEstateValidators, runValidation, addEstates);
 router.put(
   "/inmuebles/editar/:id",
