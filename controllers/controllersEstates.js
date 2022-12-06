@@ -169,10 +169,32 @@ exports.deleteEstate = (req, res) => {
 //Filter of Estates
 exports.filterEstates = (req, res) => {
   const { operacion, tipo, departamento } = req.body;
-  knex("inmuebles").join(
-    "direcciones",
-    "inmuebles.direccionId",
-    "=",
-    "direcciones.direccionId"
-  );
+  knex("inmuebles")
+    .join(
+      "direcciones",
+      "inmuebles.direccionId",
+      "=",
+      "direcciones.direccionId"
+    )
+    .then((resultado) => {
+      if (operacion !== "") {
+        resultado = resultado.filter((item) => {
+          return item.operacion === operacion;
+        });
+      }
+      if (tipo !== "") {
+        resultado = resultado.filter((item) => {
+          return item.tipo === tipo;
+        });
+      }
+      if (departamento !== "") {
+        resultado = resultado.filter((item) => {
+          return item.departamento === departamento;
+        });
+      }
+      res.json(resultado);
+    })
+    .catch((error) => {
+      res.status(400).json({ error: error.message });
+    });
 };
