@@ -177,17 +177,17 @@ exports.filterEstates = (req, res) => {
       "direcciones.direccionId"
     )
     .then((resultado) => {
-      if (operacion !== "") {
+      if (operacion) {
         resultado = resultado.filter((item) => {
           return item.operacion === operacion;
         });
       }
-      if (tipo !== "") {
+      if (tipo) {
         resultado = resultado.filter((item) => {
           return item.tipo === tipo;
         });
       }
-      if (departamento !== "") {
+      if (departamento) {
         resultado = resultado.filter((item) => {
           return item.departamento === departamento;
         });
