@@ -84,7 +84,7 @@ exports.searchId = (req, res) => {
     )
     .where("inmuebles.inmuebleId", id)
     .then((respuesta) => {
-      res.json(respuesta);
+      res.json(respuesta[0]);
     })
     .catch((error) => {
       res.status(400).json({ error: error.message });
