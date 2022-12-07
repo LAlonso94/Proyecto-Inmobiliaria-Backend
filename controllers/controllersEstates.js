@@ -84,7 +84,7 @@ exports.searchId = (req, res) => {
     )
     .where("inmuebles.inmuebleId", id)
     .then((respuesta) => {
-      res.json(respuesta);
+      res.json(respuesta[0]);
     })
     .catch((error) => {
       res.status(400).json({ error: error.message });
@@ -93,7 +93,7 @@ exports.searchId = (req, res) => {
 
 //Edit one existing estate selected by id
 exports.editEstate = async (req, res) => {
-  const { id } = req.params;
+  const id = req.params.id;
   const {
     operacion,
     tipo,
@@ -148,16 +148,17 @@ exports.editEstate = async (req, res) => {
 exports.deleteEstate = (req, res) => {
   const id = req.params.id;
   knex("inmuebles")
-    .where("direccionId", id)
+    .where("inmuebleId", id)
+    .returning("direccionId")
     .del()
-    .then(() => {
+    .then((respuesta) => {
       knex("direcciones")
-        .where("direccionId", id)
+        .where("direccionId", respuesta[0].direccionId)
         .del()
         .then((respuesta) => {
           res.json({
-            respuesta: respuesta,
-            message: "Se ha borrado al inmueble correctamente",
+            inmueble: respuesta[0],
+            message: "Se ha actualizado el inmueble correctamente",
           });
         });
     })

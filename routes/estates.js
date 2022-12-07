@@ -19,12 +19,7 @@ router.get("/inmuebles", allEstates);
 router.get("/publicacion/:id", searchId);
 router.post("/inmuebles/filtro", filterEstates);
 router.post("/inmuebles/nuevo", addEstateValidators, runValidation, addEstates);
-router.put(
-  "/inmuebles/editar/:id",
-  editEstateValidators,
-  runValidation,
-  editEstate
-);
+router.put("/inmuebles/editar/:id", editEstate);
 router.delete("/inmuebles/borrar/:id", deleteEstate);
 
 module.exports = router;
