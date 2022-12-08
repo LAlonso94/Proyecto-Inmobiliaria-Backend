@@ -20,11 +20,21 @@ const {
 router.get("/inmuebles", allEstates);
 router.get("/publicacion/:id", searchId);
 router.post("/inmuebles/filtro", filterEstates);
-router.post(
-  "/inmuebles/nuevo",
-  /* addEstateValidators, runValidation, addEstates*/ addEstatesWithImage
+router.post("/inmuebles/nuevo", addEstatesWithImage);
+router.put(
+  "/inmuebles/editar/:id",
+  verifyToken,
+  verifyAdmin,
+  runValidation,
+  editEstate
 );
-
+router.delete(
+  "/inmuebles/borrar/:id",
+  verifyToken,
+  verifyAdmin,
+  runValidation,
+  deleteEstate
+);
 router.put("/inmuebles/editar/:id", editEstate);
 router.delete("/inmuebles/borrar/:id", deleteEstate);
 
