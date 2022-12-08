@@ -24,12 +24,8 @@ router.post(
   "/inmuebles/nuevo",
   /* addEstateValidators, runValidation, addEstates*/ addEstatesWithImage
 );
-router.put(
-  "/inmuebles/editar/:id",
-  editEstateValidators,
-  runValidation,
-  editEstate
-);
+
+router.put("/inmuebles/editar/:id", editEstate);
 router.delete("/inmuebles/borrar/:id", deleteEstate);
 
 router.get("/photos", photo);
