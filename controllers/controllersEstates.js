@@ -195,19 +195,25 @@ exports.editEstate = async (req, res) => {
 //Delete one existing estate
 exports.deleteEstate = (req, res) => {
   const id = req.params.id;
-  knex("inmuebles")
+  knex("imagenes")
     .where("inmuebleId", id)
-    .returning("direccionId")
+    .returning("inmuebleId")
     .del()
     .then((respuesta) => {
-      knex("direcciones")
-        .where("direccionId", respuesta[0].direccionId)
+      knex("inmuebles")
+        .where("inmuebleId", respuesta[0].inmuebleId)
+        .returning("direccionId")
         .del()
         .then((respuesta) => {
-          res.json({
-            inmueble: respuesta[0],
-            message: "Se ha actualizado el inmueble correctamente",
-          });
+          knex("direcciones")
+            .where("direccionId", respuesta[0].direccionId)
+            .del()
+            .then((respuesta) => {
+              res.json({
+                inmueble: respuesta[0],
+                message: "Se ha actualizado el inmueble correctamente",
+              });
+            });
         });
     })
     .catch((error) => {
