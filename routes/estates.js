@@ -3,7 +3,6 @@ const router = express.Router();
 const { runValidation } = require("../validators/index");
 const {
   allEstates,
-  addEstates,
   searchId,
   editEstate,
   deleteEstate,
@@ -12,10 +11,6 @@ const {
   photo,
 } = require("../controllers/controllersEstates");
 const { verifyToken, verifyAdmin } = require("../validators/validatorUsers");
-const {
-  addEstateValidators,
-  editEstateValidators,
-} = require("../validators/validatorsEstates");
 
 router.get("/inmuebles", allEstates);
 router.get("/publicacion/:id", searchId);
@@ -38,6 +33,6 @@ router.delete(
 router.put("/inmuebles/editar/:id", editEstate);
 router.delete("/inmuebles/borrar/:id", deleteEstate);
 
-router.get("/photos", photo);
+router.get("/photos/:id", photo);
 
 module.exports = router;

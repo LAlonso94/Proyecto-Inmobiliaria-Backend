@@ -1,5 +1,6 @@
 const { check } = require("express-validator");
 
+///No lo utilizamos porque para subir imagenes no van por BODY, van por FORM DATA, y esto da error
 exports.addEstateValidators = [
   check("operacion").not().isEmpty().withMessage("La operación es requerida"),
   check("tipo").not().isEmpty().withMessage("Agregue un tipo de inmueble"),
