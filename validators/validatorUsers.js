@@ -16,8 +16,6 @@ exports.userValidator = [
     .withMessage("Formato de email inválido"),
   body("password")
     .exists()
-    //.not()
-    //.isEmpty()
     .notEmpty()
     .withMessage("Se requiere contraseña")
     .isLength({ min: 8, max: 120 })

@@ -2,9 +2,12 @@ const knex = require("../config/knexFile");
 const formidable = require("formidable");
 const fs = require("fs");
 
-//Show all photos
+//Show photos
 exports.photo = (req, res) => {
-  knex("imagenes")
+  const id = req.params.id;
+  knex("inmuebles")
+    .join("imagenes", "imagenes.inmuebleId", "=", "inmuebles.inmuebleId")
+    .where("inmuebles.inmuebleId", id)
     .then((result) => {
       res.set("Content-Type", result[0].filetype);
       return res.send(result[0].filedata);
@@ -23,6 +26,7 @@ exports.allEstates = (req, res) => {
       "=",
       "direcciones.direccionId"
     )
+
     .then((respuesta) => {
       res.json(respuesta);
     })
@@ -31,64 +35,7 @@ exports.allEstates = (req, res) => {
     });
 };
 
-//Add one new Estate
-
-exports.addEstates = async (req, res) => {
-  const {
-    operacion,
-    tipo,
-    dormitorios,
-    baños,
-    metrosTerreno,
-    metrosEdificados,
-    observaciones,
-    descripcion,
-    precio,
-    garage,
-    departamento,
-    zona,
-    domicilio,
-  } = req.body;
-
-  try {
-    const newAddress = await knex("direcciones")
-      .returning("direccionId")
-      .insert([
-        {
-          departamento: departamento,
-          zona: zona,
-          domicilio: domicilio,
-        },
-      ]);
-    const newEstate = await knex("inmuebles").insert(
-      [
-        {
-          operacion: operacion,
-          tipo: tipo,
-          dormitorios: dormitorios,
-          baños: baños,
-          metrosTerreno: metrosTerreno,
-          metrosEdificados: metrosEdificados,
-          observaciones: observaciones,
-          descripcion: descripcion,
-          precio: precio,
-          garage: garage,
-          direccionId: newAddress[0].direccionId,
-        },
-      ],
-      ["operacion", "tipo", "dormitorios"]
-    );
-    res.json({
-      newEstate: newEstate,
-      message: "El inmueble se agrego correctamente",
-    });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
-
-/////////////////PARA PROBAR LO DE AGREGAR IMAGEN A BD///////
-
+//add estate with Image
 exports.addEstatesWithImage = (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
@@ -128,15 +75,6 @@ exports.addEstatesWithImage = (req, res) => {
         fileData = fs.readFileSync(files.file.filepath);
         fileType = files.file.mimetype;
 
-        const newImage = await knex("imagenes")
-          //.returning("direccionId")
-          .insert([
-            {
-              filedata: fileData,
-              filetype: fileType,
-            },
-          ]);
-
         const newAddress = await knex("direcciones")
           .returning("direccionId")
           .insert([
@@ -146,9 +84,10 @@ exports.addEstatesWithImage = (req, res) => {
               domicilio: domicilio,
             },
           ]);
-        console.log(newAddress);
-        const newEstate = await knex("inmuebles").insert(
-          [
+
+        const newEstate = await knex("inmuebles")
+          .returning("inmuebleId")
+          .insert([
             {
               operacion: operacion,
               tipo: tipo,
@@ -162,9 +101,14 @@ exports.addEstatesWithImage = (req, res) => {
               garage: garage,
               direccionId: newAddress[0].direccionId,
             },
-          ],
-          ["operacion", "tipo", "dormitorios"]
-        );
+          ]);
+        const newImage = await knex("imagenes").insert([
+          {
+            inmuebleId: newEstate[0].inmuebleId,
+            filedata: fileData,
+            filetype: fileType,
+          },
+        ]);
         res.json({
           newEstate: newEstate,
           message: "El inmueble se agrego correctamente",
@@ -175,8 +119,6 @@ exports.addEstatesWithImage = (req, res) => {
     }
   });
 };
-
-/////////////////////////////////////////////////////////////////////////
 
 //Search one specific estate by id
 exports.searchId = (req, res) => {
