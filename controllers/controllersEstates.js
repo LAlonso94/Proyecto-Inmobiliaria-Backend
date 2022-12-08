@@ -44,7 +44,6 @@ exports.addEstates = async (req, res) => {
           domicilio: domicilio,
         },
       ]);
-    console.log(newAddress);
     const newEstate = await knex("inmuebles").insert(
       [
         {

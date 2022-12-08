@@ -18,8 +18,27 @@ const {
 router.get("/inmuebles", allEstates);
 router.get("/publicacion/:id", searchId);
 router.post("/inmuebles/filtro", filterEstates);
-router.post("/inmuebles/nuevo", addEstateValidators, runValidation, addEstates);
-router.put("/inmuebles/editar/:id", editEstate);
-router.delete("/inmuebles/borrar/:id", deleteEstate);
+router.post(
+  "/inmuebles/nuevo",
+  addEstateValidators,
+  verifyToken,
+  verifyAdmin,
+  runValidation,
+  addEstates
+);
+router.put(
+  "/inmuebles/editar/:id",
+  verifyToken,
+  verifyAdmin,
+  runValidation,
+  editEstate
+);
+router.delete(
+  "/inmuebles/borrar/:id",
+  verifyToken,
+  verifyAdmin,
+  runValidation,
+  deleteEstate
+);
 
 module.exports = router;
